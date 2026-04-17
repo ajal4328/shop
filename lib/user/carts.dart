@@ -18,33 +18,56 @@ class _CartsState extends State<Carts> {
     viewcart();
   }
 
+
+
+  // bool isloading=true;
+
   List<QueryDocumentSnapshot> view=[];
+  // List<QueryDocumentSnapshot> prdt=[];
 
   final FirebaseFirestore _carts=FirebaseFirestore.instance;
 
   viewcart()async {
+
     try {
       String usr = FirebaseAuth.instance.currentUser!.uid;
       print(usr);
 
+
       QuerySnapshot snapshot = await _carts
           .collection('cart')
-          .where('uid', isEqualTo: usr)
-          .orderBy('CreatedAt', descending: true)
+          .where('user', isEqualTo: usr)
+          // .orderBy('CreatedAt', descending: true)
           .get();
 
+      print(snapshot.docs);
+      print('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');
       // List<Map<String, dynamic>> loadedCart = [];
 
-      print(snapshot.docs);
-      print('hhhhhhhhh');
+      //
+      // QuerySnapshot productshot = await _carts
+      //     .collection('product')
+      //     .orderBy('CreatedAt', descending: true)
+      //     .get();
+      //
 
+
+
+      // print(productshot);
+      print('ppppppppppppppppppppppppppppppppppppppp');
 
       setState(() {
         view = snapshot.docs;
+        // prdt= productshot.docs;
+
       });
     }
     catch(e){
-      print(e);
+      print('mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm');
+
+      setState(() {
+        // isloading=false;
+      });
     }
   }
 
@@ -56,22 +79,48 @@ class _CartsState extends State<Carts> {
 
       appBar: AppBar(),
 
-      body: view==false ?Center(child: CircularProgressIndicator(),)
+      body: view == false ?Center(child: CircularProgressIndicator(),)
+          : view.isEmpty
+          ? const Center(
+            child: Text(
+          "No Orders Found",
+          style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+            )
+          : ListView.builder  (
+            padding: const EdgeInsets.all(12),
+            itemCount: view.length,
+           itemBuilder: (context, index) {
+            var product = view[index];
+            var pid=product['product'];
+            // var ppdetails=prdt[index];
 
-          :Column(
-        children: [
-          Expanded(
-            child: view.isEmpty
-                ? const Center(child: Text('No products found'))
-                : ListView.builder(
-              itemCount: view.length,
-              itemBuilder: (context, index) {
-                var product = view[index];
 
-                double M=double.tryParse(product['mrp'].toString()) ?? 00;
-                double D=double.tryParse(product['discount'].toString()) ?? 00;
-                double P=0;
-                P=M*D/100;
+
+            // String pid = orderDoc['product'];
+
+             return FutureBuilder<DocumentSnapshot>(
+             future: FirebaseFirestore.instance
+              .collection('product')
+             .doc(pid)
+             .get(),
+              builder: (context, snapshot) {
+               if (!snapshot.hasData) {
+              return const Padding(
+              padding: EdgeInsets.all(20),
+               child: Center(child: CircularProgressIndicator()),
+               );
+               }
+
+               if (!snapshot.data!.exists) {
+              return const SizedBox();
+              }
+               var p = snapshot.data!.data() as Map<String, dynamic>;
+
+                double mrp = double.tryParse(p['mrp'].toString()) ?? 0;
+                double discount = double.tryParse(p['discount'].toString()) ?? 0;
+                double price = mrp - (mrp * discount / 100);
+
 
 
                 return InkWell(
@@ -96,9 +145,9 @@ class _CartsState extends State<Carts> {
 
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: product['uri'] != null
+                            child: p['uri'] != null
                                 ? Image.network(
-                              product['uri'],
+                              p['uri'],
                               width: 100,
                               height: 100,
                               fit: BoxFit.cover,
@@ -120,7 +169,7 @@ class _CartsState extends State<Carts> {
                               children: [
 
                                 Text(
-                                  product['name'] ?? 'No name',
+                                  p['name'] ?? 'No name',
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -134,7 +183,7 @@ class _CartsState extends State<Carts> {
 
 
                                 Text(
-                                  product['details'] ?? 'No details available',
+                                  p['details'] ?? 'No details available',
                                   style: const TextStyle(
                                     fontSize: 14,
                                     color: Colors.black54,
@@ -146,7 +195,7 @@ class _CartsState extends State<Carts> {
                                 const SizedBox(height: 8),
 
                                 Text(
-                                  '₹${P.toString()}',
+                                  "₹$price",
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -162,12 +211,11 @@ class _CartsState extends State<Carts> {
                   ),
                 );
               },
-            ),
-          ),
 
-        ],
-      ),
+          );
 
-    );
+
+    },
+    ));
   }
 }

@@ -144,62 +144,88 @@ class _UserviewState extends State<Userview> {
                             ),
                             SizedBox(width: 25,),
 
-                            Column(
-                              children: [
+                            InkWell(
 
-                                CircleAvatar(radius: 30,
-                                  backgroundImage: NetworkImage('https://th.bing.com/th?q=Beauty+Products+PNG&w=120&h=120&c=1&rs=1&qlt=70&o=7&cb=1&dpr=1.3&pid=InlineBlock&rm=3&mkt=en-IN&cc=IN&setlang=en&adlt=moderate&t=1&mw=247'),),
-                                Text('Beauty',style: TextStyle(fontWeight: FontWeight.bold),),
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>pagectgy(category: 'beauty')));
+                              },
+                              child: Column(
+                                children: [
 
-                              ],
+                                  CircleAvatar(radius: 30,
+                                    backgroundImage: NetworkImage('https://th.bing.com/th?q=Beauty+Products+PNG&w=120&h=120&c=1&rs=1&qlt=70&o=7&cb=1&dpr=1.3&pid=InlineBlock&rm=3&mkt=en-IN&cc=IN&setlang=en&adlt=moderate&t=1&mw=247'),),
+                                  Text('Beauty',style: TextStyle(fontWeight: FontWeight.bold),),
+
+                                ],
+                              ),
                             ),
                             SizedBox(width: 25,),
 
-                            Column(
-                              children: [
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>pagectgy(category: 'grocery')));
+                              },
+                              child: Column(
+                                children: [
 
-                                CircleAvatar(
-                                  radius:30,
-                                  backgroundImage: NetworkImage('https://th.bing.com/th/id/OIP.L0wWBfTcwEfK5q4BKveN9QHaGl?w=165&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3'),),
-                                Text('Grocery',style: TextStyle(fontWeight: FontWeight.bold),),
+                                  CircleAvatar(
+                                    radius:30,
+                                    backgroundImage: NetworkImage('https://th.bing.com/th/id/OIP.L0wWBfTcwEfK5q4BKveN9QHaGl?w=165&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3'),),
+                                  Text('Grocery',style: TextStyle(fontWeight: FontWeight.bold),),
 
-                              ],
+                                ],
+                              ),
                             ),
                             SizedBox(width: 25,),
 
-                            Column(
-                              children: [
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>pagectgy(category: 'gadgets')));
+                              },
+                              child: Column(
+                                children: [
 
-                                CircleAvatar(
-                                  radius:30,
-                                  backgroundImage: NetworkImage('https://th.bing.com/th/id/OIP.ZLUCaUs7HyXc-rRJooDaVgHaFO?w=262&h=186&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3'),),
-                                Text('Gadgets',style: TextStyle(fontWeight: FontWeight.bold),),
+                                  CircleAvatar(
+                                    radius:30,
+                                    backgroundImage: NetworkImage('https://th.bing.com/th/id/OIP.ZLUCaUs7HyXc-rRJooDaVgHaFO?w=262&h=186&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3'),),
+                                  Text('Gadgets',style: TextStyle(fontWeight: FontWeight.bold),),
 
-                              ],
+                                ],
+                              ),
                             ),
                             SizedBox(width: 25,),
 
-                            Column(
-                              children: [
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>pagectgy(category: 'appliances')));
+                              },
+                              child: Column(
+                                children: [
 
-                                CircleAvatar(
-                                  radius:30,
-                                  backgroundImage : NetworkImage('https://th.bing.com/th/id/OIP.d1pb2oqZOQljduQPpA_x0AHaFk?w=241&h=181&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3'),),
-                                Text('Appliances',style: TextStyle(fontWeight: FontWeight.bold),),
+                                  CircleAvatar(
+                                    radius:30,
+                                    backgroundImage : NetworkImage('https://th.bing.com/th/id/OIP.d1pb2oqZOQljduQPpA_x0AHaFk?w=241&h=181&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3'),),
+                                  Text('Appliances',style: TextStyle(fontWeight: FontWeight.bold),),
 
-                              ],
+                                ],
+                              ),
                             ),
                             SizedBox(width: 25,),
 
-                            Column(
-                              children: [
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>pagectgy(category: 'eletronic')));
+                              },
+                              child: Column(
+                                children: [
 
-                                CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage: NetworkImage('https://th.bing.com/th?q=Home+Appliances+and+Electronics+Image&w=120&h=120&c=1&rs=1&qlt=70&o=7&cb=1&dpr=1.3&pid=InlineBlock&rm=3&mkt=en-IN&cc=IN&setlang=en&adlt=moderate&t=1&mw=247'),),
-                                Text('Eletronic',style: TextStyle(fontWeight: FontWeight.bold),),
+                                  CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: NetworkImage('https://th.bing.com/th?q=Home+Appliances+and+Electronics+Image&w=120&h=120&c=1&rs=1&qlt=70&o=7&cb=1&dpr=1.3&pid=InlineBlock&rm=3&mkt=en-IN&cc=IN&setlang=en&adlt=moderate&t=1&mw=247'),),
+                                  Text('Eletronic',style: TextStyle(fontWeight: FontWeight.bold),),
 
-                              ],
+                                ],
+                              ),
                             ),
                             SizedBox(width: 25,),
 

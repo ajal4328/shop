@@ -83,6 +83,11 @@ class _addproductState extends State<addproduct> {
       ScaffoldMessenger.of(context)..showSnackBar(
         SnackBar(content: Text('Success'))
       );
+      setState(() {
+        _image=null;
+        selectcategory=null;
+        _Uploadurl=null;
+      });
       Pname.clear();
       Pdetail.clear();
       Pcategory.clear();

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shop/user/select.dart';
+import 'package:shop/user/wishview.dart';
 
 class wishlist extends StatefulWidget {
   const wishlist({super.key});
@@ -61,18 +61,17 @@ class _wishlistState extends State<wishlist> {
               itemCount: wish!.length,
               itemBuilder: (context, index) {
                 var product = wish![index];
-
                 double M=double.tryParse(product['mrp'].toString()) ?? 00;
                 double D=double.tryParse(product['discount'].toString()) ?? 00;
-                double P=0;
-                P=M*D/100;
+
+                double P=M*D/100;
+                double F=M-P;
 
 
                 return InkWell(
                   onTap: () {
 
-                  /*  Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                        viewpage(Product: product)));*/
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Wishview(Wishlist: product)));
 
                   },
                   child: Card(
@@ -140,7 +139,7 @@ class _wishlistState extends State<wishlist> {
                                 const SizedBox(height: 8),
 
                                 Text(
-                                  '₹${P.toString()}',
+                                  '₹${F.toString()}',
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,

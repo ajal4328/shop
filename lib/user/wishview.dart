@@ -1,126 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-class viewpage extends StatefulWidget {
+class Wishview extends StatefulWidget {
 
-  final QueryDocumentSnapshot Product;
+  final Map<String,dynamic> Wishlist;
 
-  const viewpage({super.key,required this.Product});
+  const Wishview({super.key,required this.Wishlist});
 
 
   @override
-  State<viewpage> createState() => _viewpageState();
+  State<Wishview> createState() => _WishviewState();
 }
 
-class _viewpageState extends State<viewpage> {
-
-  late Razorpay _razorpay;
-
-  var _selectedProductForBuy;
-
-
-
+class _WishviewState extends State<Wishview> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    checkWishlist();
 
-    _razorpay = Razorpay();
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
   }
-
-  void dispose() {
-    _razorpay.clear();
-    super.dispose();
-  }
-
-  void _startRazorpay(var p) {
-    _selectedProductForBuy = p;
-    print(_selectedProductForBuy.runtimeType);
-    double price = double.parse(p['mrp'].toString());
-    var options = {
-      'key': 'rzp_test_MJOAVy77oMVaYv',
-      'amount': (price * 100).toInt(),
-      'name': 'Shopify',
-      'description': 'Purchase: ${p['name']}',
-      'prefill': {'contact': '9876543210', 'email': 'farmer@example.com'},
-      'theme': {'color': '#FF9800'}
-    };
-    _razorpay.open(options);
-  }
-
-
-  void _handlePaymentSuccess(PaymentSuccessResponse response) => _handleBuy(_selectedProductForBuy);
-  void _handlePaymentError(PaymentFailureResponse response) => _showMsg("Payment Failed", isError: true);
-
-
-  Future<void> _handleBuy(var p) async {
-
-
-
-    double M = double.tryParse(p['mrp'].toString()) ?? 0;
-    double D = double.tryParse(p['discount'].toString()) ?? 0;
-    double finalPrice = M - (M * D / 100);
-
-
-
-
-
-    String usr= FirebaseAuth.instance.currentUser!.uid;
-
-
-    String pay=FirebaseAuth.instance.currentUser!.uid;
-
-    await FirebaseFirestore.instance.collection("order").add(
-        {
-          'user':usr,
-          'product':p.id,
-          'amount':finalPrice.toString(),
-          'status':'paid',
-        'CreatedAt': DateTime.now(),
-
-
-        });
-    
-    // await FirebaseFirestore.instance.collection('order').doc(usr).update({'status':'paid'});
-
-    }
-
-
-  void _showMsg(String msg, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(msg), backgroundColor: isError ? Colors.red : Colors.green[800], behavior: SnackBarBehavior.floating,
-    ));
-  }
-
-
 
   bool wishlisted=false;
   String? wishlistDocId;
 
 
-  checkWishlist() async {
-    String usr = FirebaseAuth.instance.currentUser!.uid;
-    final product = widget.Product;
 
-    QuerySnapshot snap = await FirebaseFirestore.instance
-        .collection('user')
-        .doc(usr)
-        .collection('wishlist')
-        .where('name', isEqualTo: product['name'])
-        .get();
-
-    if (snap.docs.isNotEmpty) {
-      setState(() {
-        wishlisted = true;
-        wishlistDocId = snap.docs.first.id;
-      });
-    }
-  }
 
 
   @override
@@ -128,7 +33,7 @@ class _viewpageState extends State<viewpage> {
 
 
 
-    final product = widget.Product;
+    final product = widget.Wishlist;
 
     double M=double.tryParse(product['mrp'].toString()) ?? 0;
     double D=double.tryParse(product['discount'].toString()) ?? 0;
@@ -144,6 +49,7 @@ class _viewpageState extends State<viewpage> {
     print(product['discount']);
 
 
+
     return Scaffold(
 
       appBar: AppBar(
@@ -156,53 +62,7 @@ class _viewpageState extends State<viewpage> {
         foregroundColor: Colors.black,
         elevation: 2,
 
-        actions: [
-          IconButton(
-              onPressed: ()async{
-                String usr=FirebaseAuth.instance.currentUser!.uid;
 
-                if(wishlisted){
-                  await FirebaseFirestore.instance
-                      .collection('user')
-                      .doc(usr)
-                      .collection('wishlist')
-                      .doc(wishlistDocId)
-                      .delete();
-                  setState(() {
-                    wishlisted=false;
-                    wishlistDocId=null;
-                  });
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Remove to Wishlist")));
-                }
-
-                else {
-                 DocumentReference prowish= await FirebaseFirestore.instance.collection('user')
-                      .doc(usr)
-                      .collection("wishlist")
-                      .add(
-                      {
-                        'uri': product['uri'],
-                        'name': product['name'],
-                        'amount': P.toString(),
-                        'details': product['details'],
-                        'discount': product['discount'],
-                        'mrp': product['mrp'],
-                        'product':product.id,
-
-                      });
-                 setState(() {
-                   wishlisted=true;
-                   wishlistDocId=prowish.id;
-                 });
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Added to Wishlist")));
-                }
-              },
-
-              icon: Icon(Icons.favorite ,color: Colors.red))
-        ],
 
       ),
 
@@ -290,7 +150,7 @@ class _viewpageState extends State<viewpage> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child:  Text(
-                         "${product['discount']}% Off",
+                          "${product['discount']}% Off",
                           style: TextStyle(
                               color: Colors.red, fontWeight: FontWeight.bold, fontSize: 13),
                         ),
@@ -352,7 +212,7 @@ class _viewpageState extends State<viewpage> {
                         await FirebaseFirestore.instance.collection("cart").add(
                             {
                               'user':usr,
-                              'product':product.id,
+                              'productId': product['id'],
                               'amount':F.toString(),
                               'status':'pending',
                               'CreatedAt': DateTime.now(),
@@ -384,20 +244,18 @@ class _viewpageState extends State<viewpage> {
                       ),
                       onPressed: ()async{
 
-                        _startRazorpay(product);
+                        String usr=FirebaseAuth.instance.currentUser!.uid;
 
-                        // String usr=FirebaseAuth.instance.currentUser!.uid;
-                        //
-                        // await FirebaseFirestore.instance.collection("order").add(
-                        //     {
-                        //       'user':usr,
-                        //       'product':product.id,
-                        //       'amount':F.toString(),
-                        //       'status':'',
-                        //     'CreatedAt': DateTime.now(),
-                        //
-                        //
-                        //     });
+                        await FirebaseFirestore.instance.collection("order").add(
+                            {
+                              'user':usr,
+                              'productId': product['id'],
+                              'amount':F.toString(),
+                              'status':'pending',
+                              'CreatedAt': DateTime.now(),
+
+
+                            });
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Proceeding to Buy...")),

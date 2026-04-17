@@ -79,8 +79,9 @@ class _pagectgyState extends State<pagectgy> {
 
             double M=double.tryParse(product['mrp'].toString()) ?? 00;
             double D=double.tryParse(product['discount'].toString()) ?? 00;
-            double P=0;
-            P=M*D/100;
+
+            double P=M*D/100;
+            double F=M-P;
 
             return InkWell(
               onTap: (){
@@ -123,7 +124,7 @@ class _pagectgyState extends State<pagectgy> {
                               style:
                               TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                           SizedBox(height: 5),
-                          Text('₹${P.toString()}',
+                          Text('₹${F.toString()}',
                               style: TextStyle(color: Colors.green)),
                         ],
                       ),
